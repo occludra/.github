@@ -153,6 +153,7 @@ This repo gives you the core AI security proxy. The managed [AI Security Gateway
   <sub>
     <a href="https://aisecuritygateway.ai/security">Security</a> ·
     <a href="https://github.com/aisecuritygateway/aisecuritygateway/blob/main/LICENSE">License (Apache 2.0)</a> ·
+    <a href="https://www.crunchbase.com/organization/ai-security-gateway">Crunchbase</a> ·
     <a href="https://linkedin.com/company/ai-security-gateway">LinkedIn</a> ·
     <a href="https://x.com/AISGateway">X / Twitter</a> ·
     <a href="https://www.youtube.com/@AISecurityGateway">YouTube</a>
