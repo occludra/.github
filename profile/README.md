@@ -7,8 +7,8 @@
 <h3 align="center">The Open-Source AI Firewall & LLM Proxy</h3>
 
 <p align="center">
-  Stop sensitive data from leaking into LLM prompts. Drop-in OpenAI SDK compatible.<br />
-  PII redaction · Secret detection · Prompt injection blocking · Self-hosted via Docker · Apache 2.0
+  Drop-in AI security proxy. Redacts PII, blocks prompt injection, enforces spend limits — before prompts reach any LLM.<br />
+  <strong>OpenAI SDK compatible. Change your base URL. Two lines of code.</strong>
 </p>
 
 <p align="center">
@@ -26,37 +26,32 @@
 
 ---
 
-## How It Works
+Every LLM application we audited had the same problem: sensitive data flowing directly from user prompts to third-party AI providers, unfiltered.
+
+AI Security Gateway is the **control layer** that sits between your application and any LLM provider — scanning every request for PII, secrets, and prompt injection attacks before anything reaches the model.
 
 ```
-                           ┌─────────────────────────────┐
-                           │        AISG Gateway          │
-    ┌──────────┐           │                              │           ┌──────────────┐
-    │          │  POST     │  1. Auth (API key)           │           │              │
-    │ Your App ├──────────▸│  2. Resolve provider/model   │──────────▸│ LLM Provider │
-    │          │           │  3. DLP scan (Presidio)      │           │ (Groq/OpenAI)│
-    │          │◂──────────│  4. Block or redact           │◂──────────│              │
-    └──────────┘  response │  5. Forward to upstream      │  response └──────────────┘
-                           │  6. Return with metadata     │
-                           │                              │
-                           │         ┌──────────┐         │
-                           │         │ Presidio │         │
-                           │         │ (PII/NER)│         │
-                           │         └──────────┘         │
+    ┌──────────┐           ┌─────────────────────────────┐           ┌──────────────┐
+    │          │  POST     │        AISG Gateway          │           │              │
+    │ Your App ├──────────▸│  1. Auth (API key)           │──────────▸│ LLM Provider │
+    │          │           │  2. DLP scan (Presidio)      │           │(OpenAI/Groq) │
+    │          │◂──────────│  3. Block or redact PII      │◂──────────│              │
+    └──────────┘  response │  4. Forward to upstream      │  response └──────────────┘
+                           │  5. Return with metadata     │
                            └─────────────────────────────┘
 ```
 
-AISG is an **OpenAI-compatible proxy** that acts as an AI firewall. It sits between your app and LLM providers, scanning every request for PII, secrets, and prompt injection attacks before anything reaches the model.
+---
 
-### Key Features
+## What It Does
 
-- **PII Redaction** — emails, phone numbers, credit cards, SSNs, names, locations, IP addresses
-- **Secret Detection** — API keys, AWS credentials, GitHub tokens, private keys, Slack webhooks
-- **Prompt Injection Blocking** — detects jailbreak and instruction override attempts
+- **PII Redaction** — 13 entity types out of the box: emails, phone numbers, credit cards, SSNs, names, locations, IP addresses, and more
+- **Secret Detection** — API keys (OpenAI, Anthropic, Google, AWS), GitHub tokens, private keys, Slack webhooks
+- **Prompt Injection Blocking** — jailbreaks, DAN variants, instruction overrides, system prompt extraction, developer mode exploits
 - **OpenAI SDK Compatible** — drop-in replacement, change one line of code
 - **Multi-Provider Routing** — BYOK, swap providers in config
 - **Fail-Closed Security** — if the safety layer is down, requests are **blocked**, never forwarded unscanned
-- **Zero Cloud Dependencies** — runs entirely on your machine via Docker
+- **Zero Cloud Dependencies** — runs entirely on your infrastructure via Docker
 - **No Telemetry** — zero external calls, no analytics, no phone-home
 
 ---
@@ -75,7 +70,7 @@ curl http://localhost:8000/v1/chat/completions \
   -H "Authorization: Bearer change-me-to-a-real-secret" \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "llama-3.3-70b-versatile",
+    "model": "llama-4-maverick",
     "messages": [{"role": "user", "content": "My email is alice@acme.com and SSN is 123-45-6789"}]
   }'
 ```
@@ -93,9 +88,9 @@ The gateway redacts the email and SSN before forwarding. The response includes `
 | `CREDIT_CARD` | `PRIVATE_KEY` (RSA, EC, etc.) | System prompt extraction |
 | `US_SSN` | `GITHUB_TOKEN` (PAT, OAuth) | DAN / jailbreak attempts |
 | `PERSON`, `LOCATION` | `SLACK_WEBHOOK` | Developer mode exploits |
-| `IP_ADDRESS` | | |
+| `IP_ADDRESS` | | SYSTEM OVERRIDE impersonation |
 
-**13 entity types** out of the box — the [managed cloud](https://aisecuritygateway.ai) extends this to **28+** with OCR image scanning.
+**13 entity types** self-hosted — the [managed cloud](https://aisecuritygateway.ai) extends this to **30+ entity types** with OCR image scanning, street addresses, crypto addresses, medical identifiers, and more.
 
 ---
 
@@ -107,6 +102,8 @@ The gateway redacts the email and SSN before forwarding. The response includes `
 - **Secret scrubbing** — structured logs automatically mask API keys and tokens
 - **Rate limiting** — token bucket per API key (default 10 req/sec)
 
+Designed for teams building **GDPR**, **HIPAA**, and **SOC 2**-compliant AI applications. Prompts are never stored.
+
 ---
 
 ## OSS vs Managed Cloud
@@ -115,14 +112,15 @@ This repo gives you the core AI security proxy. The managed [AI Security Gateway
 
 | | OSS (this repo) | [Cloud](https://aisecuritygateway.ai) |
 |---|:---:|:---:|
-| PII detection & redaction (text) | 13 entity types | 28+ entity types |
+| PII detection & redaction (text) | 13 entity types | 30+ entity types |
 | OCR image scanning | — | Yes |
-| Secret leak prevention | 5 recognizers | Extended (incl. AWS Secret Key, crypto, MAC) |
-| Prompt injection blocking | 5 core patterns | Extended pattern library |
+| Secret leak prevention | 5 recognizers | Extended (incl. Groq, AWS Secret Key, crypto, MAC) |
+| Prompt injection blocking | 5 core patterns | Extended pattern library + SYSTEM OVERRIDE |
 | Routing | Header-based (`x-provider`) | Smart Router + real-time pricing |
 | Failover | — | Automatic intelligent chains |
 | Cost optimization | — | Automatic (cheapest per request) |
 | Budget enforcement | — | Per-project caps + alerts + analytics |
+| Model discovery API | — | `GET /v1/models` with 300+ models |
 | Self-hosted | Yes | Managed |
 | Multi-project management | — | Yes |
 | Project-level DLP policies | — | Yes |
@@ -161,5 +159,5 @@ This repo gives you the core AI security proxy. The managed [AI Security Gateway
 </p>
 
 <p align="center">
-  <sub>Built by <a href="https://aisecuritygateway.ai">Datum Fuse LLC</a> — making AI safe by default.</sub>
+  <sub>Built by <a href="https://datumfuse.com">Datum Fuse LLC</a> — making AI safe by default.</sub>
 </p>
