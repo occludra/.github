@@ -28,7 +28,7 @@
 
 Every LLM application we audited had the same problem: sensitive data flowing directly from user prompts to third-party AI providers, unfiltered.
 
-AI Security Gateway is the **control layer** that sits between your application and any LLM provider — scanning every request for PII, secrets, and prompt injection attacks before anything reaches the model.
+AI Security Gateway (AISG) is the **control layer** that sits between your application and any LLM provider — scanning every request for PII, secrets, and prompt injection attacks before anything reaches the model.
 
 ```
     ┌──────────┐           ┌─────────────────────────────┐           ┌──────────────┐
