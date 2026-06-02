@@ -34,7 +34,7 @@ AI Security Gateway (AISG) is the **control layer** that sits between your appli
     ┌──────────┐           ┌─────────────────────────────┐           ┌──────────────┐
     │          │  POST     │        AISG Gateway          │           │              │
     │ Your App ├──────────▸│  1. Auth (API key)           │──────────▸│ LLM Provider │
-    │          │           │  2. DLP scan (Presidio)      │           │(OpenAI/Groq) │
+    │          │           │  2. DLP scan (Presidio)      │           │ (8 supported) │
     │          │◂──────────│  3. Block or redact PII      │◂──────────│              │
     └──────────┘  response │  4. Forward to upstream      │  response └──────────────┘
                            │  5. Return with metadata     │
@@ -49,7 +49,7 @@ AI Security Gateway (AISG) is the **control layer** that sits between your appli
 - **Secret Detection** — API keys (OpenAI, Anthropic, Google, AWS), GitHub tokens, private keys, Slack webhooks
 - **Prompt Injection Blocking** — jailbreaks, DAN variants, instruction overrides, system prompt extraction, developer mode exploits
 - **OpenAI SDK Compatible** — drop-in replacement, change one line of code
-- **Multi-Provider Routing** — BYOK, swap providers in config
+- **Multi-Provider Routing** — 8 providers: OpenAI, Anthropic, Groq, Together, Gemini, Mistral, DeepInfra, xAI — BYOK, swap in config
 - **Fail-Closed Security** — if the safety layer is down, requests are **blocked**, never forwarded unscanned
 - **Zero Cloud Dependencies** — runs entirely on your infrastructure via Docker
 - **No Telemetry** — zero external calls, no analytics, no phone-home
@@ -113,6 +113,7 @@ This repo gives you the core AI security proxy. The managed [AI Security Gateway
 | | OSS (this repo) | [Cloud](https://aisecuritygateway.ai) |
 |---|:---:|:---:|
 | PII detection & redaction (text) | 13 entity types | 30+ entity types |
+| Providers | 8 (OpenAI, Anthropic, Groq, Together, Gemini, Mistral, DeepInfra, xAI) | 8+ with managed keys |
 | OCR image scanning | — | Yes |
 | Secret leak prevention | 5 recognizers | Extended (incl. Groq, AWS Secret Key, crypto, MAC) |
 | Prompt injection blocking | 5 core patterns | Extended pattern library + SYSTEM OVERRIDE |
@@ -132,7 +133,7 @@ This repo gives you the core AI security proxy. The managed [AI Security Gateway
 | EU AI Act compliance logging (hash-chained) | — | Yes |
 | SLA & support | Community | Yes |
 
-> **Skip the setup?** [aisecuritygateway.ai](https://aisecuritygateway.ai) — everything here plus dashboards, smart cost routing, and 8+ providers. 1M free credits, no credit card.
+> **Skip the setup?** [aisecuritygateway.ai](https://aisecuritygateway.ai) — everything here plus dashboards, smart cost routing, semantic caching, EU AI Act compliance logging, and recursive loop protection. 1M free credits, no credit card.
 
 ---
 
