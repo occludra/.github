@@ -133,6 +133,14 @@ This repo gives you the core AI security proxy. The managed [AI Security Gateway
 | EU AI Act compliance logging (hash-chained) | — | Yes |
 | SLA & support | Community | Yes |
 
+**Why are loop protection, EU AI Act logging, and semantic caching cloud-only?** These aren't artificial paywalls — each genuinely requires distributed infrastructure:
+
+- **Loop protection** needs shared state (Redis) across horizontally-scaled proxy instances to detect cross-instance agent loops. A single-instance approximation would miss the exact failure mode you'd want to catch.
+- **EU AI Act logging** needs managed WORM storage with tamper-evident hash chains, retention policies, and secure export — the operational burden regulated teams pay to avoid.
+- **Semantic caching** needs a distributed cache backend with TTL management and cross-instance coherence. A local cache only helps one instance.
+
+The OSS is a complete, production-ready security proxy. If a feature doesn't require distributed infrastructure, it belongs in the OSS. The 8-provider expansion (from 2 at launch) is one example of this commitment.
+
 > **Skip the setup?** [aisecuritygateway.ai](https://aisecuritygateway.ai) — everything here plus dashboards, smart cost routing, semantic caching, EU AI Act compliance logging, and recursive loop protection. 1M free credits, no credit card.
 
 ---
