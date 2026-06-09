@@ -7,14 +7,15 @@
 <h3 align="center">The Open-Source AI Firewall & LLM Proxy</h3>
 
 <p align="center">
-  Drop-in AI security proxy. Redacts PII, blocks prompt injection, enforces spend limits — before prompts reach any LLM.<br />
-  <strong>OpenAI SDK compatible. Change your base URL. Two lines of code.</strong>
+  Drop-in AI security proxy with DLP, SSO, RBAC, SIEM, and Hybrid VPC. Redacts PII, blocks prompt injection, enforces governance — before prompts reach any LLM.<br />
+  <strong>OpenAI SDK compatible. Enterprise-ready. Two lines of code.</strong>
 </p>
 
 <p align="center">
   <a href="https://github.com/aisecuritygateway/aisecuritygateway"><strong>Get Started</strong></a> ·
   <a href="https://aisecuritygateway.ai/docs"><strong>Docs</strong></a> ·
   <a href="https://aisecuritygateway.ai/open-source"><strong>OSS vs Cloud</strong></a> ·
+  <a href="https://aisecuritygateway.ai/docs/hybrid-vpc-deployment"><strong>Hybrid VPC</strong></a> ·
   <a href="https://aisecuritygateway.ai"><strong>Managed Cloud (1M free credits)</strong></a>
 </p>
 
@@ -53,6 +54,10 @@ AI Security Gateway (AISG) is the **control layer** that sits between your appli
 - **Fail-Closed Security** — if the safety layer is down, requests are **blocked**, never forwarded unscanned
 - **Zero Cloud Dependencies** — runs entirely on your infrastructure via Docker
 - **No Telemetry** — zero external calls, no analytics, no phone-home
+- **SAML SSO** — Okta, Azure AD, Google Workspace, any SAML 2.0 IdP — auto-provisioning + enforced SSO (cloud)
+- **RBAC** — 4-tier role hierarchy (Owner / Admin / Member / Viewer) with 17 granular permissions (cloud)
+- **SIEM Connectors** — stream security events to Splunk HEC, Datadog Logs, or Microsoft Sentinel in real-time (cloud)
+- **Hybrid VPC** — compiled Go proxy in your VPC, prompts never leave your network. Cloud dashboard for policies (cloud)
 
 ---
 
@@ -121,13 +126,17 @@ This repo gives you the core AI security proxy. The managed [AI Security Gateway
 | Failover | — | Automatic intelligent chains |
 | Cost optimization | — | Automatic (cheapest per request) |
 | Budget enforcement | — | Per-project caps + alerts + analytics |
-| Model discovery API | — | `GET /v1/models` with 300+ models |
+| Model discovery API | — | `GET /v1/models` with 600+ models |
 | Self-hosted | Yes | Managed |
 | Multi-project management | — | Yes |
 | Project-level DLP policies | — | Yes |
 | Dashboards, leak reports & analytics | — | Yes |
 | Real-time model pricing registry | — | Yes |
 | Managed provider keys (no BYOK required) | — | Yes |
+| SAML SSO (Okta, Azure AD, Google Workspace) | — | Yes |
+| RBAC (Owner/Admin/Member/Viewer, 17 permissions) | — | Yes |
+| SIEM connectors (Splunk, Datadog, Sentinel) | — | Yes |
+| Hybrid VPC (prompts stay in your network) | — | Yes |
 | Recursive loop protection (agent retry kill) | — | Yes |
 | Webhook security alerts (HMAC-signed) | — | Yes |
 | EU AI Act compliance logging (hash-chained) | — | Yes |
@@ -141,7 +150,9 @@ This repo gives you the core AI security proxy. The managed [AI Security Gateway
 
 The OSS is a complete, production-ready security proxy. If a feature doesn't require distributed infrastructure, it belongs in the OSS. The 8-provider expansion (from 2 at launch) is one example of this commitment.
 
-> **Skip the setup?** [aisecuritygateway.ai](https://aisecuritygateway.ai) — everything here plus dashboards, smart cost routing, semantic caching, EU AI Act compliance logging, and recursive loop protection. 1M free credits, no credit card.
+**Enterprise features** (SAML SSO, RBAC, SIEM connectors) require centralized identity management, organization-level metadata, and persistent event streaming — inherently multi-tenant services. **Hybrid VPC** bridges the gap: prompts stay in your network while the cloud manages policies, SSO, and analytics via metadata-only telemetry.
+
+> **Skip the setup?** [aisecuritygateway.ai](https://aisecuritygateway.ai) — everything here plus SSO, RBAC, SIEM connectors, Hybrid VPC, dashboards, smart cost routing, and 600+ models. 1M free credits, no credit card.
 
 ---
 
