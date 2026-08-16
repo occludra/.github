@@ -142,7 +142,7 @@ This repo gives you the core AI security proxy. The managed [Occludra Cloud](htt
 | Providers | 8 (OpenAI, Anthropic, Groq, Together, Gemini, Mistral, DeepInfra, xAI) | 8+ with managed keys |
 | OCR image scanning | — | Yes |
 | Secret leak prevention | 5 recognizers | Extended (incl. Groq, AWS Secret Key, crypto, MAC) |
-| Prompt injection blocking | 5 core patterns | Extended pattern library + SYSTEM OVERRIDE |
+| Prompt injection blocking | 5 core patterns | Extended library: mid-context override, system-prompt extraction, refusal suppression, SYSTEM OVERRIDE — FP-tuned |
 | Routing | Header-based (`x-provider`) | Smart Router + real-time pricing |
 | Failover | — | Automatic intelligent chains |
 | Cost optimization | — | Automatic (cheapest per request) |
@@ -158,6 +158,8 @@ This repo gives you the core AI security proxy. The managed [Occludra Cloud](htt
 | RBAC (Owner/Admin/Member/Viewer, 17 permissions) | — | Yes |
 | SIEM connectors (Splunk, Datadog, Sentinel) | — | Yes |
 | Hybrid VPC (prompts stay in your network) | — | Yes |
+| MCP Gateway (policy enforcement on the agent tool plane) | — | Enterprise — private beta |
+| Semantic caching (DLP-aware) | — | Yes |
 | Recursive loop protection (agent retry kill) | — | Yes |
 | Webhook security alerts (HMAC-signed) | — | Yes |
 | EU AI Act compliance logging (hash-chained) | — | Yes |
@@ -172,6 +174,8 @@ This repo gives you the core AI security proxy. The managed [Occludra Cloud](htt
 The OSS is a complete, production-ready security proxy. If a feature doesn't require distributed infrastructure, it belongs in the OSS. The 8-provider expansion (from 2 at launch) is one example of this commitment.
 
 **Enterprise features** (SAML SSO, RBAC, SIEM connectors) require centralized identity management, organization-level metadata, and persistent event streaming — inherently multi-tenant services. **Hybrid VPC** bridges the gap: prompts stay in your network while the cloud manages policies, SSO, and analytics via metadata-only telemetry.
+
+**MCP Gateway** (Enterprise, *private beta*) extends the same policy engine to the agent **tool plane** — the surface prompt-only gateways miss. It scans MCP tool descriptions for poisoning at catalog time, DLP-scans tool-call **arguments** (block) and tool **results** (redact/block), and enforces default-deny tool allowlists. Runs in both managed Cloud and Hybrid VPC.
 
 > **Skip the setup?** [occludra.ai](https://occludra.ai) — everything here plus SSO, RBAC, SIEM connectors, Hybrid VPC, dashboards, smart cost routing, and 600+ models. 1M free credits, no credit card.
 
